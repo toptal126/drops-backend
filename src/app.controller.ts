@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MailService } from './mail/mail.service';
 import { RequestConfirmCodeDto } from './mail/dto/RequestConfirmCode.dto';
@@ -16,10 +16,18 @@ export class AppController {
   }
 
   @Post('/get-confirmation-email')
-  getConfirmationEmail(@Body() requestDto: RequestConfirmCodeDto) {
-    return this.mailService.sendUserConfirmation(
+  async getConfirmationEmail(@Body() requestDto: RequestConfirmCodeDto) {
+    return await this.mailService.sendUserConfirmation(
       requestDto,
       Math.floor(Math.random() * 1000000).toString(),
     );
+  }
+  @Post('/verify-code')
+  async verifyConfirmationCode(
+    @Body() verifyCode: { code: string; email: string },
+  ) {
+    const { code, email } = verifyCode;
+    const result = await this.mailService.verifyUserCode(email, code);
+    return result?.emailVerified || false;
   }
 }

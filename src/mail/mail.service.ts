@@ -12,18 +12,17 @@ export class MailService {
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async sendUserConfirmation(user: RequestConfirmCodeDto, token: string) {
+  async sendUserConfirmation(user: RequestConfirmCodeDto, code: string) {
     console.log(this.userModel.db.name);
     await this.userModel.findOneAndUpdate(
       { email: user.email },
       {
         email: user.email,
         wallet: user.wallet,
-        confirmationCode: token,
+        confirmationCode: code,
       },
       { upsert: true },
     );
-    const url = `https://nerofi.app/auth/confirm?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
@@ -33,8 +32,22 @@ export class MailService {
 
       context: {
         name: user.name,
-        url,
+        code,
       },
     });
+  }
+
+  async verifyUserCode(email: string, code: string) {
+    const result = await this.userModel
+      .findOneAndUpdate(
+        {
+          email,
+          confirmationCode: code,
+        },
+        { emailVerified: true },
+        { returnDocument: 'after', new: true },
+      )
+      .exec();
+    return result;
   }
 }
