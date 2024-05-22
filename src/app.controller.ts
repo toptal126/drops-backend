@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MailService } from './mail/mail.service';
-import { RequestConfirmCode } from './mail/dto/RequestConfirmCode.dto';
+import { RequestConfirmCodeDto } from './mail/dto/RequestConfirmCode.dto';
 
 @Controller()
 export class AppController {
@@ -16,7 +16,7 @@ export class AppController {
   }
 
   @Post('/get-confirmation-email')
-  getConfirmationEmail(@Body() requestDto: RequestConfirmCode) {
+  getConfirmationEmail(@Body() requestDto: RequestConfirmCodeDto) {
     return this.mailService.sendUserConfirmation(
       requestDto,
       Math.floor(Math.random() * 1000000).toString(),

@@ -4,11 +4,24 @@ import { Global, Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import { MAIL_HOST, MAIL_USER, MAIL_PASSWORD, MAIL_FROM } from 'src/config/configuration';
+import {
+  MAIL_HOST,
+  MAIL_USER,
+  MAIL_PASSWORD,
+  MAIL_FROM,
+} from 'src/config/configuration';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/schema/user.schema';
 
 @Global() // 👈 global module
 @Module({
   imports: [
+    MongooseModule.forFeature([
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+    ]),
     MailerModule.forRootAsync({
       // imports: [ConfigModule], // import module if not enabled globally
       useFactory: async () => ({
@@ -37,4 +50,4 @@ import { MAIL_HOST, MAIL_USER, MAIL_PASSWORD, MAIL_FROM } from 'src/config/confi
   providers: [MailService],
   exports: [MailService],
 })
-export class MailModule { }
+export class MailModule {}
