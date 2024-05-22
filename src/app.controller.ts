@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MailService } from './mail/mail.service';
+import { RequestConfirmCode } from './mail/dto/RequestConfirmCode.dto';
 
 @Controller()
 export class AppController {
@@ -14,14 +15,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('test')
-  testFunc() {
+  @Post('/get-confirmation-email')
+  getConfirmationEmail(@Body() requestDto: RequestConfirmCode) {
     return this.mailService.sendUserConfirmation(
-      {
-        email: 'toptal126@gmail.com',
-        name: 'Toptal126',
-      },
-      '1234',
+      requestDto,
+      Math.floor(Math.random() * 1000000).toString(),
     );
   }
 }

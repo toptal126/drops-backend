@@ -7,13 +7,13 @@ export class MailService {
   constructor(private mailerService: MailerService) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const url = `example.com/auth/confirm?token=${token}`;
+    const url = `https://nerofi.app/auth/confirm?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,
-      subject: 'Welcome to Nice App! Confirm your Email',
+      subject: 'Welcome to Nerofi App! Confirm your Email',
 
-      template: './confirmation', // ✅ template found again in v1.6.0
+      template: './confirmation',
 
       context: {
         name: user.name,
