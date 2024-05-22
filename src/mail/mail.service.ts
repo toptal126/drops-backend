@@ -20,6 +20,7 @@ export class MailService {
         email: user.email,
         wallet: user.wallet,
         confirmationCode: code,
+        guess: user.guess,
       },
       { upsert: true },
     );

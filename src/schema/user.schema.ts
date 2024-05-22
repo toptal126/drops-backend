@@ -16,8 +16,12 @@ export class User {
 
   @Prop({ default: false })
   emailVerified: boolean;
+
   @Prop()
   wallet: string;
+
+  @Prop()
+  guess: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
